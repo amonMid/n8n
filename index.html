@@ -3,119 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Message</title>
+    <title>Modern Compose</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg-color: #f3f4f6;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             --card-bg: #ffffff;
-            --text-main: #1f2937;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-gradient);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            color: var(--text-main);
         }
 
         .form-container {
             background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
             width: 100%;
-            max-width: 400px;
+            max-width: 440px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
         }
 
         h2 {
-            margin-top: 0;
-            color: var(--text-main);
-            font-size: 1.5rem;
-            text-align: center;
+            margin: 0 0 1.5rem 0;
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            text-align: left;
         }
 
         .form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
         label {
             display: block;
             font-size: 0.875rem;
-            font-weight: 500;
-            color: #4b5563;
+            font-weight: 600;
+            color: var(--text-main);
             margin-bottom: 0.5rem;
         }
 
         input, textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
             box-sizing: border-box; 
-            font-size: 1rem;
-            transition: border-color 0.2s, ring 0.2s;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #fcfcfd;
         }
 
         input:focus, textarea:focus {
             outline: none;
-            border-color: var(--primary-color);
-            ring: 2px var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
         }
 
         button {
             width: 100%;
-            background-color: var(--primary-color);
+            background-color: var(--primary);
             color: white;
-            padding: 0.75rem;
+            padding: 1rem;
             border: none;
-            border-radius: 6px;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
         }
 
         button:hover {
             background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 120px;
+        }
+
+        /* Modernized Display Area */
+        #displayArea {
+            margin-top: 2rem;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-card {
+            background: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 16px;
+            border: 1px dashed var(--border);
+        }
+
+        .message-card p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .success-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #059669;
+            background: #ecfdf5;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 1rem;
         }
     </style>
 </head>
 <body>
 
-    <div class="form-container">
-        <h2>Compose Message</h2>
-        <form method="POST" action="https://anchorarnejo.app.n8n.cloud/webhook/api/message">
-            
-            <div class="form-group">
-                <label for="to">Recipient Email</label>
-                <input type="email" id="to" name="to" placeholder="example@gmail.com" required>
-            </div>
+<div class="form-container">
+    <h2>Compose Message</h2>
+    <form id="messageForm">
+        <div class="form-group">
+            <label for="to">Recipient Email</label>
+            <input type="email" id="to" name="to" placeholder="name@company.com" required>
+        </div>
 
-            <div class="form-group">
-                <label for="subject">Subject</label>
-                <input type="text" id="subject" name="subject" placeholder="What is this about?" required>
-            </div>
+        <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="Feedback for the team" required>
+        </div>
 
-            <div class="form-group">
-                <label for="message">Message</label>
-                <textarea id="message" name="message" placeholder="Type your message here..." required></textarea>
-            </div>
+        <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Type your message..." required></textarea>
+        </div>
 
-            <button type="submit">Send Message</button>
-            
-        </form>
+        <button type="submit" id="submitBtn">Send Message</button>
+    </form>
+
+    <div id="displayArea" style="display: none;">
+        <h3 style="font-size: 0.875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">Recently Sent</h3>
+        <div id="messageContent" class="message-card">
+            </div>
     </div>
+</div>
+
+<script>
+    const messageForm = document.getElementById('messageForm');
+    const displayArea = document.getElementById('displayArea');
+    const messageContent = document.getElementById('messageContent');
+    const submitBtn = document.getElementById('submitBtn');
+
+    messageForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+
+        const formData = {
+            to: document.getElementById('to').value,
+            subject: document.getElementById('subject').value,
+            message: document.getElementById('message').value
+        };
+
+        try {
+            await fetch('https://anchorarnejo.app.n8n.cloud/webhook/api/message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            displayArea.style.display = 'block';
+            messageContent.innerHTML = `
+                <p><span style="color: var(--text-muted)">To:</span> <strong>${formData.to}</strong></p>
+                <p><span style="color: var(--text-muted)">Subject:</span> <strong>${formData.subject}</strong></p>
+                <p style="white-space: pre-wrap; margin-top: 1rem; color: #334155;">${formData.message}</p>
+                <div class="success-badge">✓ DELIVERED</div>
+            `;
+
+            messageForm.reset();
+        } catch (error) {
+            alert('Something went wrong. Please try again.');
+        } finally {
+            submitBtn.textContent = 'Send Message';
+            submitBtn.disabled = false;
+        }
+    });
+</script>
 
 </body>
 </html>
